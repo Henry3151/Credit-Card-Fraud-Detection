@@ -10,6 +10,18 @@
 ![Architecture](https://img.shields.io/badge/architecture-Clean%20Architecture-purple)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker&logoColor=white)
 ![OS](https://img.shields.io/badge/OS-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-henrique--silva--ds-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/henrique-silva-ds)
+
+---
+
+## Autor
+
+**Henrique Silva** — Data Scientist | ML Engineer | Fintech & Risk Models
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-henrique--silva--ds-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/henrique-silva-ds)
+[![GitHub](https://img.shields.io/badge/GitHub-Henry3151-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Henry3151)
+
+Pos-graduacao em Machine Learning Engineering — FIAP + Alura (PosTech)
 
 ---
 
@@ -387,6 +399,15 @@ pytest tests/ -v   # 14 testes
 - **APIs de inferencia em tempo real** — latencia < 50ms em todos os projetos
 - **55 testes automatizados** cobrindo entidades, casos de uso e endpoints
 - **Cross-platform** — Windows, Linux e macOS
+
+---
+
+## Contato
+
+**Henrique Silva**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-henrique--silva--ds-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/henrique-silva-ds)
+[![GitHub](https://img.shields.io/badge/GitHub-Henry3151-181717?style=flat&logo=github&logoColor=white)](https://github.com/Henry3151/Fintech-Risk-Framework)
 
 ---
 
