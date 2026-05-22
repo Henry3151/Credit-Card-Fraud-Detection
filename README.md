@@ -6,6 +6,7 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.3-orange?logo=pytorch&logoColor=white)
 ![LightGBM](https://img.shields.io/badge/LightGBM-4.6-green)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111-teal?logo=fastapi&logoColor=white)
+![PowerBI](https://img.shields.io/badge/Power%20BI-F2C811?logo=powerbi&logoColor=black)
 ![Tests](https://img.shields.io/badge/tests-55%20passed-brightgreen)
 ![Architecture](https://img.shields.io/badge/architecture-Clean%20Architecture-purple)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker&logoColor=white)
@@ -102,7 +103,10 @@ Fintech-Risk-Framework/
 │   ├── reports/figures/
 │   └── scripts/
 ├── powerbi/                      # Dashboards Power BI
-│   └── figures/
+│   ├── figures/                  # Prints dos dashboards
+│   ├── customer-segmentation-dashboard.pbix
+│   ├── credit-score-dashboard.pbix
+│   └── fintech-risk-executive-dashboard.pbix
 ├── scripts/                      # Scripts de treinamento Projeto 1
 ├── models/                       # Artefatos Projeto 1
 ├── reports/figures/              # Graficos Projeto 1
@@ -333,6 +337,10 @@ Modelo de **Survival Analysis** usando **Cox Proportional Hazards** para prever 
 ### Dashboard ML
 
 ![Dashboard](default-prediction/reports/figures/dashboard.png)
+
+### Power BI Dashboard
+
+![Dashboard Executive](powerbi/figures/dashboard-executive.png)
 
 ### O problema
 
