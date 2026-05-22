@@ -60,11 +60,54 @@ api → use_cases → domain ← infrastructure
 ```
 
 ```
-src/
-├── domain/          # Entidades e contratos — zero dependencias externas
-├── use_cases/       # Regras de negocio — orquestra sem conhecer frameworks
-├── infrastructure/  # PyTorch, XGBoost, LightGBM, lifelines — implementacoes concretas
-└── api/             # FastAPI, Pydantic, injecao de dependencia
+Fintech-Risk-Framework/
+├── src/                          # Projeto 1 — Credit Card Fraud Detection
+│   ├── domain/
+│   │   ├── entities/
+│   │   └── interfaces/
+│   ├── use_cases/
+│   ├── infrastructure/
+│   │   ├── ml/
+│   │   ├── models/
+│   │   └── repositories/
+│   └── api/
+├── customer-segmentation/        # Projeto 2 — Customer Segmentation
+│   ├── src/
+│   │   ├── domain/
+│   │   ├── use_cases/
+│   │   ├── infrastructure/
+│   │   └── api/
+│   ├── data/raw/
+│   ├── models/
+│   ├── reports/figures/
+│   └── scripts/
+├── credit-score/                 # Projeto 3 — Credit Score
+│   ├── src/
+│   │   ├── domain/
+│   │   ├── use_cases/
+│   │   ├── infrastructure/
+│   │   └── api/
+│   ├── data/raw/
+│   ├── models/
+│   ├── reports/figures/
+│   └── scripts/
+├── default-prediction/           # Projeto 4 — Default Prediction
+│   ├── src/
+│   │   ├── domain/
+│   │   ├── use_cases/
+│   │   ├── infrastructure/
+│   │   └── api/
+│   ├── data/raw/
+│   ├── models/
+│   ├── reports/figures/
+│   └── scripts/
+├── powerbi/                      # Dashboards Power BI
+│   └── figures/
+├── scripts/                      # Scripts de treinamento Projeto 1
+├── models/                       # Artefatos Projeto 1
+├── reports/figures/              # Graficos Projeto 1
+├── notebooks/                    # Analises exploratórias
+└── tests/                        # Testes Projeto 1
 ```
 
 ---
