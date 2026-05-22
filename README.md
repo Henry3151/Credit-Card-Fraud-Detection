@@ -36,6 +36,21 @@ Pos-graduacao em Machine Learning Engineering — FIAP + Alura (PosTech)
 
 ---
 
+## Dashboards Power BI
+
+Visualizacoes interativas construidas sobre os dados reais dos modelos de ML.
+
+### Customer Segmentation — Basico
+![Dashboard Segmentation](powerbi/figures/dashboard-segmentation.png)
+
+### Credit Score Analytics — Intermediario
+![Dashboard Credit Score](powerbi/figures/dashboard-credit-score.png)
+
+### Fintech Risk Executive — Avancado
+![Dashboard Executive](powerbi/figures/dashboard-executive.png)
+
+---
+
 ## Arquitetura
 
 Todos os projetos seguem Clean Architecture com a mesma regra de dependencia:
@@ -142,9 +157,13 @@ pytest tests/test_fraud_detection.py -v   # 14 testes
 
 Segmentacao de clientes usando **K-Means + UMAP** sobre features **RFM** (Recency, Frequency, Monetary) extraidas do dataset Online Retail UCI (541k transacoes, 5.819 clientes).
 
-### Dashboard
+### Dashboard ML
 
 ![Dashboard](customer-segmentation/reports/figures/dashboard.png)
+
+### Power BI Dashboard
+
+![Dashboard Power BI](powerbi/figures/dashboard-segmentation.png)
 
 ### O problema
 
@@ -196,9 +215,13 @@ pytest tests/ -v   # 13 testes
 
 Modelo de credit scoring com **LightGBM + Platt calibration + SHAP** e analise de vies algoritmico por faixa etaria. Dataset Give Me Some Credit (150k clientes, Kaggle).
 
-### Dashboard
+### Dashboard ML
 
 ![Dashboard](credit-score/reports/figures/dashboard.png)
+
+### Power BI Dashboard
+
+![Dashboard Power BI](powerbi/figures/dashboard-credit-score.png)
 
 ### O problema
 
@@ -264,7 +287,7 @@ pytest tests/ -v   # 14 testes
 
 Modelo de **Survival Analysis** usando **Cox Proportional Hazards** para prever quando (nao apenas se) um emprestimo vai entrar em default. Dataset Lending Club (2.2M emprestimos, 2007-2018).
 
-### Dashboard
+### Dashboard ML
 
 ![Dashboard](default-prediction/reports/figures/dashboard.png)
 
@@ -374,6 +397,7 @@ pytest tests/ -v   # 14 testes
 | Categoria | Tecnologias |
 |-----------|-------------|
 | ML / DL | PyTorch, XGBoost, LightGBM, scikit-learn, SHAP, UMAP, lifelines |
+| BI | Power BI (3 dashboards — basico, intermediario, avancado) |
 | API | FastAPI, Pydantic, Uvicorn |
 | Tracking | MLflow |
 | Testes | pytest, 55 testes automatizados |
@@ -396,6 +420,7 @@ pytest tests/ -v   # 14 testes
 - **Score 0-1000 com grades A-E** — padrao de mercado financeiro
 - **Survival Analysis (Cox PH)** — modela tempo ate o evento, nao apenas classificacao binaria
 - **Tratamento de dados censurados** — diferencial tecnico vs. classificadores convencionais
+- **Power BI** — 3 dashboards interativos (basico, intermediario, avancado) com dados reais dos modelos
 - **APIs de inferencia em tempo real** — latencia < 50ms em todos os projetos
 - **55 testes automatizados** cobrindo entidades, casos de uso e endpoints
 - **Cross-platform** — Windows, Linux e macOS
