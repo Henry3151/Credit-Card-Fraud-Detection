@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Agent — Fintech Risk Framework</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; }
+
+  header { background: #161b22; border-bottom: 1px solid #21262d; padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; }
+  header h1 { font-size: 1.2rem; font-weight: 600; color: #58a6ff; }
+  header span { font-size: 0.85rem; color: #8b949e; }
+  .badge { background: #1f6feb22; color: #58a6ff; border: 1px solid #1f6feb55; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 400px 1fr; gap: 1.5rem; }
+
+  .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.5rem; }
+  .card h2 { font-size: 0.9rem; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem; }
+
+  .section-title { font-size: 0.75rem; color: #58a6ff; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 1rem 0 0.5rem; padding-bottom: 4px; border-bottom: 1px solid #21262d; }
+  .section-title:first-child { margin-top: 0; }
+
+  .form-group { margin-bottom: 0.75rem; }
+  .form-group label { display: block; font-size: 0.78rem; color: #8b949e; margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 6px 10px; background: #0d1117; border: 1px solid #30363d;
+    border-radius: 6px; color: #e6edf3; font-size: 0.85rem;
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: #58a6ff; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+
+  button.analyze-btn {
+    width: 100%; padding: 0.75rem; background: #238636; border: none; border-radius: 6px;
+    color: #fff; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 1rem;
+    transition: background 0.2s;
+  }
+  button.analyze-btn:hover { background: #2ea043; }
+  button.analyze-btn:disabled { background: #21262d; color: #8b949e; cursor: not-allowed; }
+
+  .result-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #8b949e; font-size: 0.9rem; gap: 0.5rem; }
+  .result-placeholder svg { opacity: 0.3; }
+
+  .risk-banner { border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+  .risk-alto    { background: #3d1c1c; border: 1px solid #f8514944; }
+  .risk-moderado{ background: #2d2010; border: 1px solid #e3b34144; }
+  .risk-baixo   { background: #0d2c1a; border: 1px solid #3fb95044; }
+  .risk-label   { font-size: 1.1rem; font-weight: 700; }
+  .risk-alto .risk-label    { color: #f85149; }
+  .risk-moderado .risk-label{ color: #e3b341; }
+  .risk-baixo .risk-label   { color: #3fb950; }
+  .risk-meta { font-size: 0.78rem; color: #8b949e; text-align: right; }
+
+  .api-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .api-card { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 0.875rem; }
+  .api-card .api-title { font-size: 0.75rem; color: #8b949e; margin-bottom: 0.5rem; font-weight: 600; }
+  .api-card .api-metric { font-size: 1.1rem; font-weight: 700; color: #58a6ff; }
+  .api-card .api-sub { font-size: 0.75rem; color: #8b949e; margin-top: 2px; }
+  .api-card.error { border-color: #f8514944; }
+  .api-card.error .api-metric { color: #f85149; font-size: 0.8rem; }
+
+  .narrative-box { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 1rem; font-size: 0.85rem; line-height: 1.7; color: #c9d1d9; white-space: pre-wrap; }
+
+  .provider-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; background: #1f6feb22; color: #58a6ff; border: 1px solid #1f6feb44; padding: 2px 8px; border-radius: 20px; margin-bottom: 0.75rem; }
+
+  .loading { display: none; text-align: center; padding: 2rem; color: #8b949e; }
+  .spinner { width: 32px; height: 32px; border: 3px solid #21262d; border-top-color: #58a6ff; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .latency { font-size: 0.75rem; color: #8b949e; margin-top: 0.5rem; text-align: right; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Risk Agent</h1>
+  <span>Fintech Risk Framework</span>
+  <span class="badge">Fraud · Segmentation · Credit · Default</span>
+</header>
+
+<div class="container">
+
+  <!-- Formulario -->
+  <div class="card">
+    <h2>Dados do Cliente</h2>
+
+    <div class="section-title">Identificacao</div>
+    <div class="form-group">
+      <label>ID do Cliente</label>
+      <input type="text" id="client_id" value="C001">
+    </div>
+
+    <div class="section-title">Transacao</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Valor (R$)</label>
+        <input type="number" id="transaction_amount" value="150">
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input type="number" id="transaction_time" value="406">
+      </div>
+    </div>
+
+    <div class="section-title">Perfil RFM</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Recency (dias)</label>
+        <input type="number" id="recency" value="30">
+      </div>
+      <div class="form-group">
+        <label>Frequency</label>
+        <input type="number" id="frequency" value="10">
+      </div>
+      <div class="form-group">
+        <label>Monetary (R$)</label>
+        <input type="number" id="monetary" value="5000">
+      </div>
+    </div>
+
+    <div class="section-title">Dados Pessoais e Financeiros</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Idade</label>
+        <input type="number" id="age" value="35">
+      </div>
+      <div class="form-group">
+        <label>Renda Mensal (R$)</label>
+        <input type="number" id="monthly_income" value="8000">
+      </div>
+      <div class="form-group">
+        <label>DTI (debt-to-income)</label>
+        <input type="number" id="dti" step="0.01" value="0.3">
+      </div>
+      <div class="form-group">
+        <label>FICO Score</label>
+        <input type="number" id="fico_range_low" value="680">
+      </div>
+      <div class="form-group">
+        <label>Util. Credito Rotativo</label>
+        <input type="number" id="revolving_utilization" step="0.01" value="0.4">
+      </div>
+      <div class="form-group">
+        <label>Contas Abertas</label>
+        <input type="number" id="open_acc" value="8">
+      </div>
+    </div>
+
+    <div class="section-title">Emprestimo</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Valor (R$)</label>
+        <input type="number" id="loan_amnt" value="15000">
+      </div>
+      <div class="form-group">
+        <label>Taxa de Juros (%)</label>
+        <input type="number" id="int_rate" step="0.1" value="12.5">
+      </div>
+      <div class="form-group">
+        <label>Grade</label>
+        <select id="grade">
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C" selected>C</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="G">G</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Prazo (meses)</label>
+        <select id="term_months">
+          <option value="36" selected>36</option>
+          <option value="60">60</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anos Empregado</label>
+        <input type="number" id="emp_length_years" value="5">
+      </div>
+      <div class="form-group">
+        <label>Consultas 6 meses</label>
+        <input type="number" id="inq_last_6mths" value="1">
+      </div>
+    </div>
+
+    <button class="analyze-btn" onclick="analyze()">Analisar Risco</button>
+  </div>
+
+  <!-- Resultado -->
+  <div class="card" id="result-card">
+
+    <div class="result-placeholder" id="placeholder">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+      </svg>
+      <span>Preencha os dados e clique em Analisar Risco</span>
+    </div>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <div>Consultando os 4 modelos em paralelo...</div>
+    </div>
+
+    <div id="result-content" style="display:none">
+      <h2 style="margin-bottom:1rem;">Relatorio de Risco</h2>
+
+      <div id="risk-banner" class="risk-banner">
+        <div>
+          <div style="font-size:0.75rem;color:#8b949e;margin-bottom:4px;">Risco Consolidado</div>
+          <div class="risk-label" id="risk-label">—</div>
+        </div>
+        <div class="risk-meta" id="risk-meta"></div>
+      </div>
+
+      <div class="api-grid">
+        <div class="api-card" id="card-fraud">
+          <div class="api-title">Fraud Detection</div>
+          <div class="api-metric" id="fraud-metric">—</div>
+          <div class="api-sub" id="fraud-sub">—</div>
+        </div>
+        <div class="api-card" id="card-seg">
+          <div class="api-title">Customer Segmentation</div>
+          <div class="api-metric" id="seg-metric">—</div>
+          <div class="api-sub" id="seg-sub">—</div>
+        </div>
+        <div class="api-card" id="card-credit">
+          <div class="api-title">Credit Score</div>
+          <div class="api-metric" id="credit-metric">—</div>
+          <div class="api-sub" id="credit-sub">—</div>
+        </div>
+        <div class="api-card" id="card-default">
+          <div class="api-title">Default Prediction</div>
+          <div class="api-metric" id="default-metric">—</div>
+          <div class="api-sub" id="default-sub">—</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:0.5rem; display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:0.85rem;font-weight:600;color:#8b949e;">Relatorio Narrativo</div>
+        <div class="provider-badge" id="provider-badge">claude</div>
+      </div>
+      <div class="narrative-box" id="narrative">—</div>
+      <div class="latency" id="latency"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function analyze() {
+  const btn = document.querySelector('.analyze-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analisando...';
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('result-content').style.display = 'none';
+
+  const v_features = Array(28).fill(0);
+
+  const payload = {
+    client_id: document.getElementById('client_id').value,
+    transaction_time: parseFloat(document.getElementById('transaction_time').value),
+    transaction_amount: parseFloat(document.getElementById('transaction_amount').value),
+    v_features,
+    recency: parseFloat(document.getElementById('recency').value),
+    frequency: parseFloat(document.getElementById('frequency').value),
+    monetary: parseFloat(document.getElementById('monetary').value),
+    age: parseInt(document.getElementById('age').value),
+    monthly_income: parseFloat(document.getElementById('monthly_income').value),
+    dti: parseFloat(document.getElementById('dti').value),
+    fico_range_low: parseFloat(document.getElementById('fico_range_low').value),
+    revolving_utilization: parseFloat(document.getElementById('revolving_utilization').value),
+    open_acc: parseInt(document.getElementById('open_acc').value),
+    late_90_days: 0, real_estate_loans: 1, late_60_89_days: 0,
+    late_30_59_days: 0, dependents: 1,
+    loan_amnt: parseFloat(document.getElementById('loan_amnt').value),
+    int_rate: parseFloat(document.getElementById('int_rate').value),
+    grade: document.getElementById('grade').value,
+    emp_length_years: parseFloat(document.getElementById('emp_length_years').value),
+    revol_util: parseFloat(document.getElementById('revolving_utilization').value) * 100,
+    total_acc: 20, inq_last_6mths: parseInt(document.getElementById('inq_last_6mths').value),
+    pub_rec: 0, term_months: parseInt(document.getElementById('term_months').value),
+  };
+
+  try {
+    const res = await fetch('/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderResult(data);
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('placeholder').style.display = 'flex';
+    document.getElementById('placeholder').innerHTML =
+      `<span style="color:#f85149">Erro: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analisar Risco';
+  }
+}
+
+function renderResult(data) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('result-content').style.display = 'block';
+
+  const banner = document.getElementById('risk-banner');
+  const label  = document.getElementById('risk-label');
+  const meta   = document.getElementById('risk-meta');
+  label.textContent = data.risk_summary;
+  banner.className = 'risk-banner ' + (
+    data.risk_summary.includes('ALTO')     ? 'risk-alto'    :
+    data.risk_summary.includes('MODERADO') ? 'risk-moderado': 'risk-baixo'
+  );
+  meta.innerHTML = `Cliente: ${data.client_id}<br>Latencia: ${data.latency_ms}ms`;
+
+  // Fraud
+  const f = data.fraud_result;
+  if (f.error) {
+    document.getElementById('card-fraud').classList.add('error');
+    document.getElementById('fraud-metric').textContent = 'API offline';
+    document.getElementById('fraud-sub').textContent = f.error.slice(0,40);
+  } else {
+    document.getElementById('fraud-metric').textContent =
+      f.is_fraud ? '⚠ FRAUDE DETECTADA' : '✓ Legitima';
+    document.getElementById('fraud-metric').style.color =
+      f.is_fraud ? '#f85149' : '#3fb950';
+    document.getElementById('fraud-sub').textContent =
+      `Prob: ${((f.fraud_probability||0)*100).toFixed(1)}% · ${f.risk_label||''}`;
+  }
+
+  // Segmentation
+  const s = data.segmentation_result;
+  if (s.error) {
+    document.getElementById('card-seg').classList.add('error');
+    document.getElementById('seg-metric').textContent = 'API offline';
+    document.getElementById('seg-sub').textContent = s.error.slice(0,40);
+  } else {
+    document.getElementById('seg-metric').textContent =
+      s.segment_label || s.cluster_id || '—';
+    document.getElementById('seg-sub').textContent =
+      `RFM Score: ${(s.rfm_score||0).toFixed(2)} · ${s.is_high_value ? 'High Value' : 'Standard'}`;
+  }
+
+  // Credit
+  const c = data.credit_result;
+  if (c.error) {
+    document.getElementById('card-credit').classList.add('error');
+    document.getElementById('credit-metric').textContent = 'API offline';
+    document.getElementById('credit-sub').textContent = c.error.slice(0,40);
+  } else {
+    document.getElementById('credit-metric').textContent =
+      `Score ${c.score || '—'} · Grade ${c.risk_grade || '—'}`;
+    document.getElementById('credit-sub').textContent =
+      c.recommendation || '—';
+  }
+
+  // Default
+  const d = data.default_result;
+  if (d.error) {
+    document.getElementById('card-default').classList.add('error');
+    document.getElementById('default-metric').textContent = 'API offline';
+    document.getElementById('default-sub').textContent = d.error.slice(0,40);
+  } else {
+    document.getElementById('default-metric').textContent =
+      `PD 12m: ${((d.pd_12m||0)*100).toFixed(1)}%`;
+    document.getElementById('default-sub').textContent =
+      `Tier: ${d.risk_tier||'—'} · Survival 12m: ${((d.survival_at_12m||0)*100).toFixed(1)}%`;
+  }
+
+  // Narrative
+  document.getElementById('narrative').textContent = data.narrative;
+  document.getElementById('provider-badge').textContent =
+    data.llm_provider === 'claude' ? '✦ Claude API' :
+    data.llm_provider === 'ollama' ? '⬡ Ollama local' : 'sem LLM';
+  document.getElementById('latency').textContent =
+    `Tempo total de analise: ${data.latency_ms}ms`;
+}
+</script>
+</body>
+</html>
